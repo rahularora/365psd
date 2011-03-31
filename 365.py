@@ -4,8 +4,9 @@ import urllib
 import os
 
 url = "http://365psd.com/day/"
-directory = "/Users/rahularora/Desktop/365/"
-days = 3
+homedir = os.path.expanduser('~')
+directory = homedir + "/Desktop/365/"
+days = 364
 day = 1
 
 if not os.path.exists(directory):

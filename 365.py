@@ -5,11 +5,12 @@ import os
 
 url = "http://365psd.com/day/"
 homedir = os.path.expanduser('~')
-directory = homedir + "/Desktop/365/"
-days = 3
+directory = homedir + "/365psd/"
+days = 364
 day = 1
 
 psd_directory = directory + "psd/"
+img_directory = directory + "img/"
 
 def create_dir(dir):
 	if not os.path.exists(dir):
@@ -17,13 +18,9 @@ def create_dir(dir):
 
 create_dir(directory)
 create_dir(psd_directory)
+create_dir(img_directory)
     
 os.chdir(directory)
-
-def remove_whitespace(data):
-    'Function to remove white-space from text'
-    p = re.compile(r'\s+')
-    return p.sub('', data)
     
 def get_webpage(url):
     result = urllib.urlopen(url)
@@ -38,6 +35,14 @@ def download_psd(psd_url, title):
          urllib.urlretrieve (psd_url,path)
     except:
          print "download_psd function : Error while downloading psd"
+
+def download_img(img_url, title):
+    path = img_directory + title + ".png"
+    print "Downloading img to " + path
+    try:
+         urllib.urlretrieve (img_url,path)
+    except:
+         print "download_img function : Error while downloading image"
 
 while (day != (days+1)):
     link = url + str(day) + "/"
@@ -56,6 +61,12 @@ while (day != (days+1)):
         
         psd = divsoup.find('a', attrs={ 'class' : 'download' })
         download_psd(psd['href'], title_text)
+        
+        img = divsoup.find('div', attrs={ 'class' : 'img' })
+        img = str(img)
+        imgsoup = BeautifulSoup(img)
+        img_src = imgsoup.find('img')['src']
+        download_img(img_src, title_text)
         
         if(day != days):
             print "Moving on to a new day, fellas!"
